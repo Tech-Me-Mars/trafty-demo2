@@ -39,6 +39,12 @@ const onClick = (title) => {
 /* Tailwind CSS จะดูแลส่วนของสไตล์ */
 </style>
 <style scoped>
+.menu-item {
+  @apply flex items-center justify-between bg-white py-4 px-5 rounded-lg shadow-md text-gray-700 text-lg font-medium;
+}
+.menu-item i {
+  @apply text-gray-500;
+}
 .van-nav-bar {
     --van-nav-bar-background: #ffc83A;
     --van-nav-bar-text-color: black;
@@ -54,87 +60,58 @@ const onClick = (title) => {
 }
 </style>
 <template>
-    <div class="bg-zinc-100 min-h-screen">
-        <van-nav-bar :title="t('Smart Travel Safety')">
-            <template #left>
-                <drawer-menu />
-            </template>
-            <template #right>
-                <div class="flex items-center gap-2">
-                    <!-- <i class="fa-solid fa-magnifying-glass" style="color: white;font-size: 22px;"></i> -->
-                    <div class="border p-0.5 rounded-md w-7 flex justify-center items-center">
-                    <i class="fa-regular fa-comment-dots" style="color: white;font-size: 22px;"></i>
-                </div>
-                </div>
-            </template>
-        </van-nav-bar>
-        <!-- Header -->
-        <div class="bg-white">
-            <widgetMap />
-            
-
-            <div class="flex items-center justify-between mb-4 pt-4">
-                <div class="font-bold text-lg">{{ t('การจัดการข้อมูล') }}</div>
-            </div>
-
-            <!-- Stats Overview -->
-            <div class="grid grid-cols-3 gap-4 mb-3">
-                <div class="bg-white text-center p-4 border-r-2 cursor-pointer">
-                    <div>
-                        <div class="text-xl font-bold">{{ resDataComon?.count_waiting_approval }}</div>
-                        <div class="text-gray-600 text-sm">{{ t('รออนุมัติ') }}</div>
-                    </div>
-                </div>
-                <div class="bg-white text-center p-4 border-r-2 cursor-pointer">
-                    <div>
-                        <div class="text-xl font-bold">{{ resDataComon?.count_pass }}</div>
-                        <div class="text-gray-600 text-sm">{{ t('อนุมัติแล้ว') }}</div>
-                    </div>
-                </div>
-                <div class="bg-white text-center p-4 cursor-pointer">
-                    <div @click="navigateTo('/inspector/send-warning')">
-                        <div class="text-xl font-bold">{{ resDataComon?.count_not_pass }}</div>
-                        <div class="text-gray-600 text-sm">{{ t('ไม่ผ่านเกณฑ์') }}</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-
-        <!-- List Section -->
-        <van-cell-group class="!m-0 !p-0">
-            <van-cell :title="t('ระบบจัดเก็บข้อมูล')" is-link >
-            </van-cell>
-            <van-cell :title="t('จัดการแหล่งท่องเที่ยว')" is-link @click="navigateTo('/inspector/list/tourlist')">
-                <template #value>
-                    <span class="relative" v-if="resDataComon?.notify_tourist>0">
-                        <span class="absolute top-0 right-4">
-                            <Badge :value="resDataComon?.notify_tourist" severity="danger" class="bg-red-700"></Badge>
-                        </span>
-                    </span>
-                </template>
-            </van-cell>
-            <van-cell :title="t('จัดการธุรกิจในแหล่งท่องเที่ยว')" is-link @click="navigateTo('/inspector/list/business-tourlist')">
-                <template #value>
-                    <span class="relative">
-                        <span class="absolute top-0 right-4" v-if="resDataComon?.notify_business_tourist>0">
-                            <Badge :value="resDataComon?.notify_business_tourist" severity="danger" class="bg-red-700"></Badge>
-                        </span>
-                    </span>
-                </template>
-            </van-cell>
-            <van-cell :title="t('ตรวจสอบคอมเมนท์')" is-link  />
-            <van-cell :title="t('จัดการใบเตือน')" is-link @click="navigateTo('/inspector/warning-list')">
-                <template #value>
-                    <span class="relative">
-                        <span class="absolute top-0 right-4" v-if="resDataComon?.notify_warning>0">
-                            <Badge :value="resDataComon?.notify_warning" severity="danger" class="bg-red-700"></Badge>
-                        </span>
-                    </span>
-                </template>
-            </van-cell>
-        </van-cell-group>
-        <MyToast :data="alertToast" />
+    <div class="min-h-screen bg-yellow-400 p-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <!-- Profile Image -->
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+        alt="Profile"
+        class="w-10 h-10 rounded-full border-2 border-white"
+      />
+      <!-- Menu Icon -->
+      <!-- <button
+        class="w-10 h-10 bg-yellow-300 flex items-center justify-center rounded-full shadow-md hover:bg-yellow-500 transition"
+      >
+        <i class="fa-solid fa-bars text-lg text-black"></i>
+      </button> -->
+      <DrawerMenu/>
     </div>
+
+    <!-- Title -->
+    <h2 class="text-xl font-bold text-black text-center mb-6">
+      ระบบบริหารจัดการข้อมูล
+    </h2>
+
+    <!-- Menu List -->
+    <div class="space-y-4">
+      <div class="menu-item">
+        <i class="fa-solid fa-map-location-dot"></i>
+        <span>จัดการแหล่งท่องเที่ยว</span>
+        <i class="fa-solid fa-chevron-right text-gray-500"></i>
+      </div>
+
+      <div class="menu-item relative" @click="navigateTo('/inspector/list/business-tourlist')">
+        <i class="fa-solid fa-store"></i>
+        <span>จัดการธุรกิจในแหล่งท่องเที่ยว</span>
+        <span
+          class="absolute right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+          >1</span
+        >
+        <i class="fa-solid fa-chevron-right text-gray-500"></i>
+      </div>
+
+      <div class="menu-item">
+        <i class="fa-solid fa-comments"></i>
+        <span>ตรวจสอบคอมเมนท์</span>
+        <i class="fa-solid fa-chevron-right text-gray-500"></i>
+      </div>
+
+      <div class="menu-item">
+        <i class="fa-solid fa-file-lines"></i>
+        <span>จัดการใบเตือน</span>
+        <i class="fa-solid fa-chevron-right text-gray-500"></i>
+      </div>
+    </div>
+  </div>
 </template>

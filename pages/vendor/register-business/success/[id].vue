@@ -34,10 +34,17 @@
         </p>
 
         <!-- ปุ่มตกลง -->
-        <Button class="w-full mt-10" style="color: white!important;" severity="contrast" label="ตกลง" />
+        <Button @click="navigateTo(`/vendor/register-business/success/${route.params.id}`)" class="w-full mt-10" style="color: white!important;" severity="contrast" label="ตกลง" />
    
         
     </div>
 </div>
 
 </template>
+
+<script setup>
+definePageMeta({
+    middleware: ["auth"],
+});
+const route = useRoute();
+</script>

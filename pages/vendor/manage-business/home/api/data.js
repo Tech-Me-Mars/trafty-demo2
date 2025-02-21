@@ -31,3 +31,8 @@ export function deletebusinessItem(id) {
   const url = `/api/v1/business-list/delect-business-list/${id}`;
   return request("delete", url, {}, true);
 }
+
+export function getShopById(id) {
+  const url = `/api/v1/business/${id}`;
+  return request("get", url, {}, true);
+}

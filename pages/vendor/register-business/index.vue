@@ -31,7 +31,7 @@ const validationSchema = toTypedSchema(
   zod.object({
     shop_name: zod.string().nonempty(requireValue).default(""),
     business_type_id: zod.number({ required_error: requireValue, invalid_type_error: requireValue }),
-    business_type_name: zod.number({ required_error: requireValue, invalid_type_error: requireValue }),
+    // business_type_name: zod.number({ required_error: requireValue, invalid_type_error: requireValue }),
     shop_details: zod.string().nonempty(requireValue).default(""),
     shop_address: zod.string().nonempty(requireValue).default(""),
     shop_phone: zod.string().nonempty(requireValue).default(""),
@@ -41,32 +41,9 @@ const validationSchema = toTypedSchema(
       .nonempty(requireValue)
       .default(""),
 
-
-
-
-    // shop_days: zod.string().nonempty(requireValue).default(""),
-    shop_days: zod.array(zod.string()).min(1, t('กรุณาเลือกวันที่ทำการ')).default([]),
-    shop_time_s: zod.date({
-      required_error: requireValue,
-      invalid_type_error: requireValue,
-    }),
-    shop_time_e: zod.date({
-      required_error: requireValue,
-      invalid_type_error: requireValue,
-    }),
-
     // shop_time: zod.string().nonempty(requireValue).default(""),
     shop_phone: zod.string().nonempty(requireValue).default(""),
-    social_media: zod.array(
-      zod.object({
-        social_name: zod.string().nonempty(requireText).default(""),
-        social_link: zod.string()
-          .url(t('กรุณาระบุลิงก์ที่ถูกต้อง')) // ตรวจสอบว่าเป็นลิงก์ที่ถูกต้อง
-          .nonempty(t('กรุณาระบุข้อมูลลิงก์')) // ตรวจสอบว่าไม่เป็นค่าว่าง
-          .default(""),
-
-      })
-    ),
+  
     image_profile: zod
       .union([
         zod.object({ src: zod.string() }), // Case where an object with `src` is provided
@@ -119,10 +96,10 @@ const onSubmit = handleSubmit(async () => {
 
   try {
     const selectedBusiness = resBusinessType.value.find(
-      (item) => item.id === selectedItem.value
+      (item) => item.id === business_type_id.value
     );
     if (selectedBusiness) {
-      business_type_name.value = selectedBusiness.id, selectedBusiness.business_type_name
+      business_type_name.value = selectedBusiness.business_type_name
     }
 
     const formData = new FormData();
@@ -142,6 +119,7 @@ const onSubmit = handleSubmit(async () => {
     const res = await dataApi.saveBusinessRegister(formData)
     navigateTo(`/vendor/register-business/success/${res.data.data?.id}`)
   } catch (error) {
+    console.error(error)
     alertToast.value = {
       title: 'ล้มเหลว',
       isError: true,
@@ -267,7 +245,7 @@ const triggerFileInputProfile = () => {
         </template>
 </van-nav-bar> -->
     <section class="p-4 card-content">
-
+      {{ errors }}
       <Form @submit="onSubmit">
         <div class="card pt-0 mb-10">
           <div class="space-y-4 mb-2">

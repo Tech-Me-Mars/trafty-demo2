@@ -1,58 +1,48 @@
 <template>
     <div class="bg-zinc-100 min-h-screen">
-        <van-nav-bar :title="t('ธุรกิจของฉัน')" left-arrow @click-left="navigateTo('/')">
+        <van-nav-bar :title="'ร้านค้า'" left-arrow @click-left="navigateTo('/')">
+            <template #left @click="navigateTo('/')">
+                <back-page />
+            </template>
         </van-nav-bar>
-        <div class="flex justify-between flex-wrap gap-2 bg-white px-4 py-3">
-            <h1 class="text-xl font-semibold">{{ t('ธุรกิจของฉัน') }} ({{ resBusiness.length }})</h1>
-            <!-- <Select v-model="status_select" disabled :options="statusOptions" optionLabel="name" optionValue="id"
-                class="w-[10rem]">
 
-            </Select> -->
-            <Button :loading="isloadingAxi" :label="t('เพิ่มธุรกิจ')" severity="primary" type="button" rounded class="w-auto"
-                outlined :pt="{
-                    root: {
-                        class: '!border-primary-main'
-                    },
-                }" @click="navigateTo('/vendor/register-business')" />
-        </div>
+        <div class="container mx-auto p-6">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">ร้านค้าของฉัน</h2>
+                <button @click="addShop"
+                    class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-500 transition">
+                    <i class="fa-solid fa-plus"></i> เพิ่มร้านค้า
+                </button>
+            </div>
+
+            <!-- รายการร้านค้า -->
+            <!-- รายการร้านค้า (แบบแนวนอน) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div v-for="shop in resBusiness" :key="shop.id" class="bg-white rounded-lg shadow-lg p-4  gap-4 border">
+                    <div class="flex items-center justify-between gap-4">
 
 
-        <div class="p-4">
-            <!-- กล่องข้อมูลธุรกิจ -->
-            <div class="border rounded-lg shadow-md bg-white w-full max-w-md mx-auto mb-2"
-                v-for="(item, index) in resBusiness" :key="index">
-                <div class="p-4">
-                    <!-- ชื่อธุรกิจ -->
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <h2 class="text-lg font-semibold text-gray-800 flex-1">{{ item?.shop_name }} <span v-if="item?.notification_status == 1"><i class="fa-solid fa-circle-exclamation" style="color: red;"></i></span></h2>
-                          
+                        <!-- รูปภาพ -->
+                        <img :src="shop.image_profile" alt="ร้านค้า"
+                            class="w-24 h-24 rounded-full border-2 border-yellow-400 object-cover" />
+
+                        <!-- รายละเอียดร้านค้า -->
+                        <div class="flex flex-col flex-grow">
+                            <h3 class="text-lg font-semibold text-gray-800">{{ shop.shop_name }}</h3>
+                            <p class="text-sm text-gray-500">{{ shop.shop_details }}</p>
+                            <p class="text-sm text-gray-500"><i class="fa-solid fa-map-marker-alt text-red-500"></i> {{
+                                shop.shop_address }}</p>
                         </div>
-                        <div v-if="item?.status == true"
-                            class="text-white bg-green-700 rounded-full px-2 py-2 text-xs">{{ t('อนุมัติแล้ว') }}</div>
-
-                        <div v-else class="text-white bg-yellow-500 rounded-full px-2 py-2 text-xs">{{ t('รอตรวจสอบ') }}</div>
                     </div>
-                    <!-- ที่อยู่ธุรกิจ -->
-                    <p class="text-gray-500 mt-1 text-sm mb-6"></p>
-
-
-                    <!-- ปุ่มแอคชัน -->
-                    <hr class="border-t mb-4 mx-5">
-                    <div class="flex  gap-3">
-
-                        <Button :loading="isloadingAxi" :label="t('รายละเอียด')" severity="primary" variant="outlined"
-                            class="w-full" :pt="{
-                                label: {
-                                    class: 'text-primary-main'
-                                },
-                                root: {
-                                    class: '!border-primary-main'
-                                },
-
-                            }" @click="navigateTo(`/vendor/manage-business/home/${item.id}`)" />
-
+                    <!-- ปุ่มดูรายละเอียดและแก้ไข -->
+                    <div class="flex space-x-2 mt-4 w-full justify-center">
+                        <button @click="navigateTo(`/vendor/manage-business/home/${shop?.id}`)"
+                            class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black rounded-lg shadow hover:bg-yellow-500 transition">
+                            <i class="fa-solid fa-eye"></i> ดูรายละเอียด
+                        </button>
                     </div>
+
                 </div>
             </div>
         </div>

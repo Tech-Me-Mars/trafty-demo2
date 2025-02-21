@@ -1,34 +1,36 @@
 <template>
-  <i @click="drawervisible = true" class="fa-solid fa-bars" style="color: white; font-size: 22px;"></i>
+  <!-- <i @click="drawervisible = true" class="fa-solid fa-bars" style="color: white; font-size: 22px;"></i> -->
+  <div class="relative">
+    <!-- ปุ่มเปิด Drawer -->
+    <button
+      @click="drawervisible = true"
+      class="w-10 h-10 bg-yellow-200 flex items-center justify-center rounded-full shadow-lg hover:bg-yellow-500 transition"
+    >
+      <i class="fa-solid fa-bars text-2xl text-black"></i>
+    </button>
 
-  <Drawer v-model:visible="drawervisible" header="Menu" class="w-64">
-    <template #header>
-      <div class="flex items-center gap-2">
-        <img src="/image/logo_erp.png" style="width: 50px;" alt="" />
-        <span class="font-bold">Menu</span>
-      </div>
-    </template>
-
-    <ul class="menu-list space-y-4">
-      <li v-for="menu in listMenu" :key="menu.id" class="menu-item flex flex-col gap-1 cursor-pointer">
-        <!-- Main Level -->
-        <div @click="navigateTo(menu.path)" class="flex items-center gap-3 hover:bg-gray-200 p-2 rounded-md">
-          <i :class="menu.icon"></i>
-          <span>{{ menu.label }}</span>
+    <!-- Drawer Menu -->
+    <Drawer v-model:visible="drawervisible" :dismissable="true" class="w-64 bg-gray-900 text-white">
+      <!-- Header -->
+      <template #header>
+        <div class="flex items-center justify-between px-4 py-3 bg-yellow-400 text-black w-full" >
+          <span class="text-lg font-semibold">เมนูหลัก</span>
         </div>
+      </template>
 
-        <!-- Sub Level -->
-        <ul v-if="menu.items" class="ml-6 space-y-2">
-          <li v-for="subItem in menu.items" :key="subItem.label"
-            @click="navigateTo(subItem.path), drawervisible = false"
-            class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
-            <!-- <i :class="subItem.icon"></i> -->
-            <span>{{ subItem.label }}</span>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </Drawer>
+      <!-- รายการเมนู -->
+      <ul class="menu-list space-y-3 p-4">
+        <li v-for="(item, index) in menuItems" :key="index">
+          <button
+            class="flex items-center space-x-3 w-full py-2 px-4 text-lg rounded-lg hover:bg-yellow-400 hover:text-black transition"
+          >
+            <i :class="item.icon" class="text-xl"></i>
+            <span>{{ item.name }}</span>
+          </button>
+        </li>
+      </ul>
+    </Drawer>
+  </div>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -86,6 +88,13 @@ const conditionAppendMenu = async () => {
 
 const drawervisible = ref(false);
 
+const menuItems = ref([
+  { name: "หน้าแรก", icon: "fa-solid fa-house" },
+  { name: "สินค้า", icon: "fa-solid fa-box-open" },
+  { name: "ตะกร้า", icon: "fa-solid fa-shopping-cart" },
+  { name: "บัญชีของฉัน", icon: "fa-solid fa-user" },
+  { name: "ออกจากระบบ", icon: "fa-solid fa-right-from-bracket" },
+]);
 </script>
 
 

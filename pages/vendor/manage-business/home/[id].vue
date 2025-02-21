@@ -11,31 +11,33 @@
                 </button>
 
                 <!-- ปุ่มเมนู -->
-                <button
+                <!-- <button
                     class="w-10 h-10 bg-yellow-200 flex items-center justify-center rounded-full shadow-md hover:bg-yellow-300 transition">
                     <i class="fa-solid fa-bars text-2xl text-gray-800"></i>
-                </button>
+                </button> -->
+                <drawer-menu></drawer-menu>
             </div>
         </div>
 
         <!-- รายการสถานที่ -->
         <div class=" p-6">
-            <div class="card">
-                <div class="bg-white border rounded-lg shadow-sm p-3 flex space-x-3">
+            <div class="card rounded-lg">
+                <div class="flex space-x-3">
                     <!-- รูปภาพ -->
-                    <img src="https://via.placeholder.com/80" alt="สถานที่" class="w-16 h-16 rounded-md object-cover">
+                    <img :src="resShop?.image_profile" alt="สถานที่" class="w-16 h-16 rounded-md object-cover">
 
                     <!-- รายละเอียด -->
                     <div class="flex-1">
-                        <h2 class="text-black font-semibold">หนึ่ง นม นัว</h2>
-                        <p class="text-gray-500 text-sm">ร้านอาหาร</p>
+                        <h2 class="text-black font-semibold">{{ resShop?.shop_name }}</h2>
+                        <p class="text-gray-500 text-sm">{{ resShop?.business_type_name }}</p>
 
                         <!-- ป้ายสถานะ -->
                         <div class="mt-2">
                             <p
                                 class="bg-red-100 text-red-600 text-xs font-semibold px-2 py-1 rounded-md flex items-center space-x-1 inline-flex ">
                                 <i class="fa-solid fa-circle-exclamation text-xs"></i>
-                                <span>รออนุมัติ</span>
+                                <span v-if="resShop?.status == true">รออนุมัติ</span>
+                                <span v-else>ตรวจสอบแล้ว</span>
                             </p>
                         </div>
                     </div>
@@ -45,14 +47,30 @@
 
         <!-- รายการของฉัน -->
         <div class="bg-yellow-100 p-4">
-            <h2 class="text-black font-semibold">รายการของฉัน (0)</h2>
+            <h2 class="text-black font-semibold">รายการของฉัน ({{ listItemShop.length }})</h2>
         </div>
 
         <!-- กล่องว่าง -->
-        <div class="flex flex-col items-center justify-center h-full bg-white flex-grow">
-            <img src="/image/no-data.png" alt="ไม่มีข้อมูล" class="w-16 h-16">
-            <p class="text-gray-500 mt-2">ยังไม่มีข้อมูล</p>
+        <div v-if="listItemShop.length > 0"
+            class="flex flex-col items-center justify-start h-full bg-white flex-grow p-4">
+            <div class="w-full">
+                <div v-for="(item, index) in listItemShop" :key="index"
+                    class="flex justify-between items-center border-b py-4">
+                    <span class="text-lg font-semibold">{{ item.name }}</span>
+                    <Button severity="danger" label="ลบรายการ" class="bg-red-600 !text-white px-4 py-2 rounded-md"
+                        @click="removeItem(index)" />
+                </div>
+            </div>
+
         </div>
+        <div v-else class="flex flex-col items-center justify-center h-full bg-white flex-grow p-4">
+            <!-- <div class="flex flex-col items-center justify-center mt-10">
+                <img src="/image/no-data.png" alt="ไม่มีข้อมูล" class="w-16 h-16" />
+                <p class="text-gray-500 mt-2">ยังไม่มีข้อมูล</p>
+            </div> -->
+            <no-data class="mt-10" />
+        </div>
+
 
         <!-- ปุ่มเพิ่ม -->
         <button @click="showAddMenu = true"
@@ -90,10 +108,47 @@
             </div>
         </van-popup>
     </div>
+    <MyToast :data="alertToast" />
 
 </template>
 
 <script setup>
-const showAddMenu = ref(false)
+definePageMeta({
+    middleware: ["auth"],
+});
 
+const alertToast = ref({});
+
+const showAddMenu = ref(false)
+const isloadingAxi = useState("isloadingAxi");
+import * as dataApi from "./api/data.js";
+const route = useRoute();
+
+const resShop = ref()
+const loadShop = async () => {
+    try {
+        const res = await dataApi.getShopById(route.params.id)
+        resShop.value = res.data.data;
+    } catch (error) {
+        console.error(error)
+        alertToast.value = {
+            title: 'ล้มเหลว',
+            isError: true,
+            color: "error",
+            msg: error.response?.data?.message || "Error occurred",
+            dataError: error,
+        };
+    }
+}
+onMounted(() => { loadShop() })
+
+const listItemShop = ref([
+    { name: "ลาวาโทสต์วานอฟฟี่" },
+    { name: "บิงซู" },
+    { name: "สเลอปี้ชาเขียว" },
+])
+
+const removeItem = (index) => {
+  listItemShop.value.splice(index, 1);
+};
 </script>

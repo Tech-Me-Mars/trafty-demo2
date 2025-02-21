@@ -1,70 +1,50 @@
 <template>
-    <div class="bg-zinc-100 min-h-screen">
-        <van-nav-bar :title="t('การจัดการธุรกิจในแหล่งท่องเที่ยว')" left-arrow @click-left="navigateTo('/inspector/home')">
+    <div class="min-h-screen bg-primary-main flex flex-col">
+
+        <van-nav-bar :title="'การจัดการธุรกิจในแหล่งท่องเที่ยว'" :border="false" left-arrow
+            @click-left="navigateTo('/inspector/home')">
+            <template #left>
+                <back-page @click="navigateTo('/inspector/home')" />
+            </template>
         </van-nav-bar>
-        <div class="flex justify-between flex-wrap gap-2 bg-white px-4 py-3">
-            <h1 class="text-xl font-semibold">{{ t('ธุรกิจในแหล่งท่องเที่ยว') }} ({{ resSurveytouristwaiting.length }})</h1>
-            <Select v-model="status_select" disabled :options="resBusinessType" optionLabel="name" optionValue="id"
-              class="w-[10rem]">
-
-            </Select>
-        </div>
 
 
-        <div class="p-4">
-            <!-- กล่องข้อมูลธุรกิจ -->
-            <div class="border rounded-lg shadow-md bg-white w-full max-w-md mx-auto mb-2"
-                v-for="(item, index) in resSurveytouristwaiting" :key="index">
-                <div class="p-4">
-                    <!-- ชื่อธุรกิจ -->
+        <section class="p-4 card-content flex-grow pt-10">
+            <div class="">
+                <!-- หัวข้อรายการ -->
+                <h2 class="text-lg font-bold text-gray-800 mb-4">
+                    รายการทั้งหมด ({{ resSurveytouristwaiting.length }})
+                </h2>
+
+                <!-- รายการร้านค้า -->
+                <div v-if="resSurveytouristwaiting.length >0" v-for="shop in resSurveytouristwaiting" :key="shop.id"
+                    class="bg-yellow-100 border border-gray-200 rounded-lg p-4 shadow-sm flex flex-col">
+                    <!-- แถวบน: ชื่อร้าน + สถานะ -->
                     <div class="flex justify-between items-center">
-                        <h2 class="text-lg font-semibold text-gray-800">{{ item?.shop_name }}</h2>
-                        <span class="text-white bg-yellow-500 rounded-full px-2 py-2 text-xs">{{
-                            item?.survey_success_text }}</span>
+                        <h3 class="text-lg font-bold text-gray-900">{{ shop?.shop_name }}</h3>
+                        <span class=" !text-red-500 text-sm px-3 py-1 " v-if="shop?.status == false">
+                            <i class="fa-solid fa-exclamation-circle"></i> รอตรวจสอบ
+                        </span>
+                        <span class=" !text-green-500 text-sm px-3 py-1 " v-if="shop?.status == true">
+                            <i class="fa-solid fa-exclamation-circle"></i> ตรวจสอบแล้ว
+                        </span>
                     </div>
-                    <!-- ที่อยู่ธุรกิจ -->
-                    <p class="text-gray-500 mt-1 text-sm mb-6"></p>
 
+                    <!-- ที่อยู่ร้าน -->
+                    <p class="text-gray-600 mt-1">{{ shop?.shop_address }}</p>
 
-                    <!-- ปุ่มแอคชัน -->
-                    <hr class="border-t mb-4 mx-5">
-                    <div class="flex  gap-3">
-
-                        <Button v-if="item?.survey_status_id == 1" disabled :label="t('ตรวจสอบแล้ว')" :loading="isloadingAxi"
-                            severity="primary" variant="outlined" class="w-full" :pt="{
-                                label: {
-                                    class: 'text-primary-main'
-                                },
-                                root: {
-                                    class: '!border-primary-main'
-                                },
-
-                            }" />
-                        <Button v-else :label="t('ตรวจสอบ')" :loading="isloadingAxi" severity="primary" variant="outlined"
-                            class="w-full" :pt="{
-                                label: {
-                                    class: 'text-primary-main'
-                                },
-                                root: {
-                                    class: '!border-primary-main'
-                                },
-
-                            }" @click="navigateTo(`/client/information/${item.business_id}`)" />
-                        <!-- <Button :loading="isloadingAxi" label="แก้ไข" severity="primary" variant="outlined" class="w-full" :pt="{
-                            label: {
-                                class: 'text-primary-main'
-                            },
-                            root: {
-                                class: '!border-primary-main'
-                            },
-
-                        }" />
-                        <Button :loading="isloadingAxi" icon="fa-regular fa-trash-can" label="" severity="danger" variant="outlined"
-                            class="!w-[10rem]" /> -->
+                    <!-- ปุ่มตรวจสอบ / ลบรายการ -->
+                    <div class="flex justify-end space-x-2 mt-3">
+                        <Button @click="navigateTo(`/client/information/${shop?.id}`)" label="ตรวจสอบ" severity="contrast" size="small" class="!text-white w-auto">
+                        </Button>
+                        
                     </div>
+
                 </div>
+
+                <no-data v-else />
             </div>
-        </div>
+        </section>
 
     </div>
 </template>
@@ -74,7 +54,7 @@
     --van-nav-bar-text-color: black;
     --van-nav-bar-icon-color: black;
     --van-nav-bar-title-text-color: black;
-    --van-nav-bar-height: 70px
+    --van-nav-bar-height: 100px
 }
 </style>
 <script setup>
@@ -102,9 +82,12 @@ const loadListData = async () => {
 onMounted(() => {
     loadListData();
 })
-
-const status_select = ref(1)
-const statusOptions = ref([
-    { id: 1, name: t('สถานะ:ทั้งหมด') }
-])
+// const resSurveytouristwaiting2 = ref([
+//     {
+//         id: 1,
+//         shop_name: "หนึ่ง นม นัว",
+//         shop_address: "ถนนพญาไท เขตราชเทวี กรุงเทพฯ",
+//         status: "รอตรวจสอบ",
+//     },
+// ]);
 </script>
