@@ -45,6 +45,8 @@ const handleNext = handleSubmit(async (values) => {
         const res = await dataApi.login(payload)
         localStorage.setItem("token", res.data.data.access_token);
         localStorage.setItem("role_id", res.data.data.user?.role_id);
+        localStorage.setItem("name", res.data.data.user?.name);
+
         navigateTo(`/`);
     } catch (error) {
         console.error(error)

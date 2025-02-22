@@ -1,30 +1,35 @@
 <template>
     <div class="min-h-screen bg-zinc-50">
         <!-- Header Section -->
-        <van-nav-bar :title="t('ดูรายละเอียดใบเตือน')" left-arrow @click-left="router.go(-1)">
+        <van-nav-bar :title="('ดูรายละเอียดใบเตือน')" left-arrow @click-left="router.go(-1)">
         </van-nav-bar>
 
         <section class="p-4">
 
             <div class="mb-10">
+    
                 <div class="mb-2 card max-w-md" v-for="(item, index) in fields" :key="index">
                     <div class="flex items-start space-x-3 mb-2">
                         <i class="fa-solid fa-circle-xmark text-red-600 mt-1"></i>
-                        <span>{{ item.value.audit_questions_text }}</span>
+                        <p>{{ item?.value.warning_title }}</p>
+                       
+                        
+
                     </div>
+                    <p class="text-black">{{ item.value.warning_details }}</p>
                     <div class="mb-3 px-2 py-2 bg-zinc-100 border border-gray-300 rounded-md flex items-start gap-2">
                         <div>
-                            <Image v-if="item.value?.respond_warning_img" :src="item.value?.respond_warning_img" alt="Image"
-                            width="50" class="object-cover w-20 h-20 rounded-md shadow-md"
-                            :pt="{ image: { class: 'object-cover w-20 h-20 rounded-md shadow-md' } }" preview />
+                            <Image v-if="item.value?.respond_warning_img" :src="item.value?.respond_warning_img"
+                                alt="Image" width="50" class="object-cover w-20 h-20 rounded-md shadow-md"
+                                :pt="{ image: { class: 'object-cover w-20 h-20 rounded-md shadow-md' } }" preview />
                         </div>
                         <div>
-                            <span class="text-lg font-bold text-gray-800 mb-1">{{ t('การตอบกลับ') }} :</span>
-                        <span class="text-md ">
-                            {{ item?.value?.respond_warning_note }}
-                        </span>
+                            <span class="text-lg font-bold text-gray-800 mb-1">การตอบกลับ :</span>
+                            <span class="text-md ">
+                                {{ item?.value?.respond_warning_note }}
+                            </span>
                         </div>
-                       
+
                     </div>
 
                     <div class="flex items-center space-x-4">
@@ -34,7 +39,7 @@
                                 v-model="item.value.choices_answer" :value="choice.audit_choices_id" class="mr-2"
                                 :invalid="errors[`list_survey[${index}].choices_answer`] ? true : false" />
                             <label class="" :for="`question_${choice.audit_choices_id}`">{{ choice.audit_choice_text
-                                }}</label>
+                            }}</label>
                         </div>
                     </div>
                 </div>
@@ -44,7 +49,7 @@
             <div class=" mx-auto">
                 <!-- <Button :loading="isloadingAxi" label="ตรวจสอบมาตรฐาน" rounded class="w-full mb-5"
                     @click="navigateTo(`/inspector/inspec-vendor/${resData.business_id}/safety-form/form1/`)" /> -->
-                <Button :loading="isloadingAxi" :label="t('อนุมัติ')" rounded class="w-full" @click="setApprove()" />
+                <Button :loading="isloadingAxi" :label="('อนุมัติ')" rounded class="w-full" @click="setApprove()" />
             </div>
 
 
@@ -101,7 +106,7 @@ const resData = ref();
 const loadData = async () => {
     try {
         const res = await dataApi.getSurveyWarningRespon(route.params.id);
-        console.log(res.data.data.responds)
+        console.log(res.data.data)
         resData.value = res.data.data;
         res.data.data?.responds?.forEach((e, i) => {
             push({
@@ -109,7 +114,8 @@ const loadData = async () => {
                 // value: {
                 survey_warning_respond_details_id: e.survey_warning_respond_details_id,
                 survey_audit_police_details_id: e.survey_audit_police_details_id,
-                audit_questions_text: e.audit_questions_text,
+                warning_title: e.warning_title,
+                warning_details: e.warning_details,
                 respond_warning_note: e.respond_warning_note,
                 respond_warning_img: e.respond_warning_img,
                 choices: e?.choices || [],
@@ -118,13 +124,14 @@ const loadData = async () => {
             });
         });
 
+
     } catch (error) {
         console.error(error)
     }
 }
 onMounted(() => loadData())
 
-const requireValue = t('กรุณาระบุข้อมูลให้ถูกต้อง');
+const requireValue = ('กรุณาระบุข้อมูลให้ถูกต้อง');
 // *************  VARIDATOR
 const validationSchema = toTypedSchema(
     zod.object({
@@ -150,15 +157,11 @@ const { remove, push, fields } = useFieldArray("list_survey");
 
 const setApprove = async () => {
     try {
-        const payload = {
-            survey_audit_police_id: parseInt(route.params.id), // สามารถปรับค่าได้ตามที่ต้องการ
-            choices: fields.value.map((item) => ({
-                [item.value.survey_audit_police_details_id]: item.value.choices_answer,
-            })),
-        };
-        const res = await dataApi.saveUpdateSurveyPoliceToApprove(payload);
+        // const res = await dataApi.saveUpdateSurveyPoliceToApprove(payload);
+        const res = await dataApi.saveApproveWarningRespon(parseInt(route.params.id));
+        
         alertToast.value = {
-            title: t('สำเร็จ'),
+            title: ('สำเร็จ'),
             color: 'info',
             isError: false,
             msg: res.data.message,
@@ -168,7 +171,7 @@ const setApprove = async () => {
         // }, 1500);
     } catch (error) {
         alertToast.value = {
-            title: t('ล้มเหลว'),
+            title: ('ล้มเหลว'),
             isError: true,
             color: "error",
             msg: error.response?.data?.message || "Error occurred",

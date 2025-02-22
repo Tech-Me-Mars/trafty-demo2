@@ -1,6 +1,6 @@
 <template>
     <div class="bg-zinc-100 min-h-screen">
-        <van-nav-bar :title="'ตรวจสอบ'" left-arrow @click-left="navigateTo('/')"  :border="false">
+        <van-nav-bar :title="'ตรวจสอบ'" left-arrow @click-left="navigateTo('/')" :border="false">
             <template #left>
                 <back-page />
             </template>
@@ -60,9 +60,9 @@
                         <i class="fa-solid fa-chevron-down text-yellow-500"></i>
                     </div> -->
                     <div class="mt-6">
-                     
-                        <van-collapse v-model="business_items_active"   :border="false">
-                            <van-collapse-item title="รายการ" name="menu"  class="">
+
+                        <van-collapse v-model="business_items_active" :border="false">
+                            <van-collapse-item title="รายการ" name="menu" class="">
                                 <div class="">
                                     <div v-for="menu in resInfo?.business_lists" :key="menu.id"
                                         class="flex justify-between">
@@ -71,7 +71,7 @@
                                     </div>
                                 </div>
                             </van-collapse-item>
-                            <van-collapse-item title="ข้อมูลมาตรฐานความปลอดภัย" name="policy"  class="">
+                            <van-collapse-item title="ข้อมูลมาตรฐานความปลอดภัย" name="policy" class="">
                                 <!-- <div class="">
                                     <div v-for="menu in resInfo?.business_lists" :key="menu.id"
                                         class="flex justify-between">
@@ -79,6 +79,19 @@
                                       
                                     </div>
                                 </div> -->
+                                <div v-for="(policy, index) in resPolicy" :key="index" class="mb-6">
+                                    <h1 class="text-md font-bold text-gray-900 mb-2">
+                                        {{ index + 1 }}. {{ policy.topic_name }}
+                                    </h1>
+
+                                    <div v-for="(item, idx) in policy.question" :key="idx"
+                                        class="text-gray-500 text-sm flex items-start mb-2">
+                                        <span class="mr-2">{{ index + 1 }}.{{ idx + 1 }}</span>
+                                        <p class="flex-1">{{ item.audit_questions_text }}</p>
+                                        <i
+                                            :class="[item.icon, 'text-lg ml-2', item.choice_text === 'มี' ? 'text-green-500' : 'text-red-500']"></i>
+                                    </div>
+                                </div>
                             </van-collapse-item>
                         </van-collapse>
                     </div>
@@ -87,9 +100,6 @@
                         <i class="fa-solid fa-chevron-down text-yellow-500"></i>
                     </div> -->
                 </div>
-
-                <!-- ปุ่มประเมิน -->
-                 {{route.params.id}}
                 <button @click="navigateTo(`/inspector/safety-form/${route.params.id}/form1`)"
                     class="w-full mt-6 bg-yellow-400 text-black font-semibold py-3 rounded-lg shadow-md hover:bg-yellow-500 transition">
                     ประเมิน
@@ -100,21 +110,25 @@
 
     </div>
 </template>
-<style >
+<style>
 .van-nav-bar {
     --van-nav-bar-background: #ffc83A;
     --van-nav-bar-text-color: black;
     --van-nav-bar-icon-color: black;
     --van-nav-bar-title-text-color: black;
     --van-nav-bar-height: 70px;
-    --van-collapse-item-content-padding:0px !important;
+    --van-collapse-item-content-padding: 0px !important;
 }
-.van-cell{
-    padding-inline: 0!important;
+
+.van-cell {
+    padding-inline: 0 !important;
 }
+
 :root {
-  --van-collapse-item-content-text-color: #f59e0b; /* เปลี่ยนเป็นสีเหลือง */
+    --van-collapse-item-content-text-color: #f59e0b;
+    /* เปลี่ยนเป็นสีเหลือง */
 }
+
 /* .van-collapse-item{
     --van-collapse-item-content-text-color:red
 }	 */
@@ -177,6 +191,7 @@ onMounted(() => {
         loadProfile();
     }
     loadDataInfo()
+    loadChoiceAudit()
 })
 
 const resInfo = ref();
@@ -188,6 +203,17 @@ const loadDataInfo = async () => {
         console.log(resInfo.value)
 
 
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const resPolicy = ref([])
+const loadChoiceAudit = async () => {
+    try {
+        const res = await dataApi.getResultPoliceSurveyAudit(route.params.id);
+        resPolicy.value = res.data.data;
+        console.log(resPolicy)
     } catch (error) {
         console.error(error)
     }

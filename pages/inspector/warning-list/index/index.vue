@@ -1,7 +1,10 @@
 <template>
   <div class="min-h-screen bg-zinc-50">
     <!-- Header Section -->
-    <van-nav-bar :title="('การตอบกลับ')" left-arrow @click-left="navigateTo('/inspector/home')">
+    <van-nav-bar :title="('การตอบกลับ')" >
+      <template #left>
+        <BackPage @click="navigateTo('/inspector/home')"/>
+      </template>
     </van-nav-bar>
 
     <!-- Tabs Section -->
@@ -58,8 +61,7 @@
                   },
 
                 }" @click="navigateTo(`/inspector/send-warning/waring-send-repeat/${item.survey_audit_police_id}`)" /> -->
-                <Button :loading="isloadingAxi" icon="fa-regular fa-trash-can" label="" severity="danger" variant="outlined"
-                  class="!w-[10rem]" />
+
               </div>
             </div>
 
