@@ -9,7 +9,8 @@
           เข้าสู่ระบบ
         </div>
       </div>
-      <i class="fas fa-search text-xl"></i>
+      <!-- <i class="fas fa-search text-xl"></i> -->
+      <drawer-menu/>
     </div>
 
     <!-- Title -->
