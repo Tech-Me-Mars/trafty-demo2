@@ -41,7 +41,7 @@ onMounted(() => {
 <template>
     <div class="bg-zinc-100 min-h-screen">
 
-        <van-nav-bar :title="t('Smart Travel Safety')">
+        <van-nav-bar :title="('Smart Travel Safety')">
             <template #right>
                 <i @click="navigateTo('/vendor/my-business')" class="fa-solid fa-xmark"
                     style="color: white;font-size: 26px;"></i>

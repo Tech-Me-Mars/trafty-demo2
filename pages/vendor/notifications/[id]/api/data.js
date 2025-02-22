@@ -11,3 +11,7 @@ export function getNotify(id) {
   return request("get", url, {}, true);
 }
 
+export function saveReplyWarning(payload) {
+  const url = `/api/v1/survey-warning-respond/insert-survey-warning-respond`;
+  return request("post", url, payload, true);
+}

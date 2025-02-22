@@ -43,7 +43,7 @@
 
             <div class=" mx-auto">
                 <!-- <Button :loading="isloadingAxi" label="ตรวจสอบมาตรฐาน" rounded class="w-full mb-5"
-                    @click="navigateTo(`/inspector/inspec-vender/${resData.business_id}/safety-form/form1/`)" /> -->
+                    @click="navigateTo(`/inspector/inspec-vendor/${resData.business_id}/safety-form/form1/`)" /> -->
                 <Button :loading="isloadingAxi" :label="t('อนุมัติ')" rounded class="w-full" @click="setApprove()" />
             </div>
 

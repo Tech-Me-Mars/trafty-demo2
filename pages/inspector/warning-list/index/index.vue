@@ -1,30 +1,12 @@
 <template>
   <div class="min-h-screen bg-zinc-50">
     <!-- Header Section -->
-    <van-nav-bar :title="t('ใบเตือน')" left-arrow @click-left="navigateTo('/inspector/home')">
+    <van-nav-bar :title="('การตอบกลับ')" left-arrow @click-left="navigateTo('/inspector/home')">
     </van-nav-bar>
 
     <!-- Tabs Section -->
     <section class="">
-      <van-tabs v-model:active="activeTab">
-
-        <van-tab :title="t('ใบเตือนที่ส่ง')">
-          <section class="p-4">
-            <div class="text-center text-gray-500 text-sm pt-10">
-              {{ t('ไม่มีข้อมูล') }} !
-
-            </div>
-          </section>
-
-        </van-tab>
-
-
-        <van-tab :title="t('การตอบกลับ')">
-          <template #title>
-            <span class="mr-3">{{ t('การตอบกลับ') }}</span>
-            <Badge :value="countList" severity="danger" class="bg-red-800"></Badge>
-          </template>
-          <section class="p-4">
+      <div class="p-4">
             <div class="card mb-2" v-for="(item,index) in resList" :key="index">
               <div class="flex items-start w-full  mb-3">
                 <Image
@@ -86,9 +68,7 @@
 
 
 
-          </section>
-        </van-tab>
-      </van-tabs>
+          </div>
       <MyToast :data="alertToast" />
 
     </section>

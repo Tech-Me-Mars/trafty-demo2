@@ -65,16 +65,9 @@ const isloadingAxi = useState("isloadingAxi");
 import { ref, computed, onMounted } from "vue";
 import { useForm, Field, Form, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
-import * as dataApi from "../api/data.js";
+import * as dataApi from "./api/data.js";
 
 const route = useRoute();
-const stepsBar = ref([
-  { step: 1, active: false },
-  { step: 2, active: true },
-  { step: 3, active: false },
-  { step: 4, active: false },
-  { step: 5, active: false },
-])
 
 const questions = ref([]); // เก็บข้อมูลคำถาม
 const answers = ref({}); // เก็บคำตอบของผู้ใช้

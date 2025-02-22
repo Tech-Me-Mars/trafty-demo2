@@ -36,3 +36,13 @@ export function getShopById(id) {
   const url = `/api/v1/business/${id}`;
   return request("get", url, {}, true);
 }
+
+
+export function createBusinessList(payload) {
+  const url = `/api/v1/business-list/createb-businessList`;
+  return request("post", url, payload, true);
+}
+export function deleteBusinessList(id) {
+  const url = `/api/v1/business-list/delect-business-list/${id}`;
+  return request("delete", url, {}, true);
+}

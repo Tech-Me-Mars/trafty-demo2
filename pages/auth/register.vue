@@ -151,7 +151,7 @@ const handleNext = handleSubmit(async (values) => {
                 </div>
 
 
-                <!-- <NuxtLink to="/inspector/inspec-vender/1/safety-form/form2"> --> 
+                <!-- <NuxtLink to="/inspector/inspec-vendor/1/safety-form/form2"> --> 
                     <!-- เพิ่ม dialog resigster -->
                 <Button :loading="isloadingAxi" :label="t('ลงทะเบียน')" type="submit" severity="primary" rounded class="w-full"
                     :pt="{

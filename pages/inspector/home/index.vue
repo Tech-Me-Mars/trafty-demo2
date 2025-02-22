@@ -85,18 +85,23 @@ const onClick = (title) => {
 
     <!-- Menu List -->
     <div class="space-y-4">
-      <div class="menu-item">
+
+      <div class="menu-item relative" @click="navigateTo('/inspector/list/business-tourlist')">
         <i class="fa-solid fa-map-location-dot"></i>
         <span>จัดการแหล่งท่องเที่ยว</span>
+        <span v-if="resDataComon?.notify_business_tourist>0"
+          class="absolute right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+          >{{ resDataComon?.notify_business_tourist }}</span
+        >
         <i class="fa-solid fa-chevron-right text-gray-500"></i>
       </div>
 
       <div class="menu-item relative" @click="navigateTo('/inspector/list/business-tourlist')">
         <i class="fa-solid fa-store"></i>
         <span>จัดการธุรกิจในแหล่งท่องเที่ยว</span>
-        <span
+        <span v-if="resDataComon?.notify_business_tourist>0"
           class="absolute right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
-          >1</span
+          >{{ resDataComon?.notify_business_tourist }}</span
         >
         <i class="fa-solid fa-chevron-right text-gray-500"></i>
       </div>
@@ -107,9 +112,13 @@ const onClick = (title) => {
         <i class="fa-solid fa-chevron-right text-gray-500"></i>
       </div>
 
-      <div class="menu-item">
-        <i class="fa-solid fa-file-lines"></i>
+      <div class="menu-item relative" @click="navigateTo('/inspector/warning-list')">
+        <i class="fa-solid fa-store"></i>
         <span>จัดการใบเตือน</span>
+        <span v-if="resDataComon?.notify_warning>0"
+          class="absolute right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+          >{{ resDataComon?.notify_warning }}</span
+        >
         <i class="fa-solid fa-chevron-right text-gray-500"></i>
       </div>
     </div>

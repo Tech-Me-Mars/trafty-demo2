@@ -5,7 +5,7 @@
             <h1 class="text-lg font-bold text-black">ข้อมูลแหล่งท่องเที่ยวของคุณ</h1>
             <div class="flex items-center space-x-4">
                 <!-- ปุ่มแจ้งเตือน -->
-                <button
+                <button @click="navigateTo(`/vendor/notifications/${route.params.id}`)"
                     class="w-10 h-10 bg-yellow-200 flex items-center justify-center rounded-full shadow-md hover:bg-yellow-300 transition">
                     <i class="fa-solid fa-bell text-2xl text-gray-800"></i>
                 </button>
@@ -51,14 +51,14 @@
         </div>
 
         <!-- กล่องว่าง -->
-        <div v-if="listItemShop.length > 0"
+        <div v-if="resShop?.business_lists.length > 0"
             class="flex flex-col items-center justify-start h-full bg-white flex-grow p-4">
             <div class="w-full">
-                <div v-for="(item, index) in listItemShop" :key="index"
+                <div v-for="(item, index) in resShop?.business_lists" :key="index"
                     class="flex justify-between items-center border-b py-4">
-                    <span class="text-lg font-semibold">{{ item.name }}</span>
+                    <span class="text-lg font-semibold">{{ item.business_list_name }}</span>
                     <Button severity="danger" label="ลบรายการ" class="bg-red-600 !text-white px-4 py-2 rounded-md"
-                        @click="removeItem(index)" />
+                        @click="askDeleteItem(item)" />
                 </div>
             </div>
 
@@ -81,32 +81,50 @@
 
         <van-popup v-model:show="showAddMenu" round position="bottom" :style="{ height: '50%' }">
             <!-- หัวข้อ และปุ่มปิด -->
-            <div class="flex items-center justify-between border-b p-5 ">
-                <h2 class="text-lg font-semibold text-black mx-auto">เพิ่มเมนู</h2>
-                <button @click="showAddMenu = false"
-                    class="w-8 h-8 bg-yellow-400 text-black rounded-full flex items-center justify-center shadow-md hover:bg-yellow-500 transition absolute right-2">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
+            <Form @submit="handleNext">
+                <div class="flex items-center justify-between border-b p-5 ">
+                    <h2 class="text-lg font-semibold text-black mx-auto">เพิ่มเมนู</h2>
+                    <button @click="showAddMenu = false"
+                        class="w-8 h-8 bg-yellow-400 text-black rounded-full flex items-center justify-center shadow-md hover:bg-yellow-500 transition absolute right-2">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
 
-            <!-- ฟอร์มกรอกข้อมูล -->
-            <div class="mt-4 px-6">
-                <label class="text-gray-500 text-sm">ชื่อเมนู</label>
-                <input type="text" v-model="menuName"
-                    class="w-full border border-yellow-400 focus:border-yellow-500 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    placeholder="ชื่อเมนู" />
-            </div>
-
-            <!-- ปุ่มเพิ่มรายการ -->
-            <!-- <button
+                <!-- ฟอร์มกรอกข้อมูล -->
+                <div class="mt-4 px-6">
+                    <label class="text-gray-500 text-sm">ชื่อเมนู</label>
+                    <InputText type="text" v-model="business_list_name"
+                        class="w-full border border-yellow-400 focus:border-yellow-500 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        placeholder="ชื่อเมนู" :invalid="errors?.business_list_name ? true : false" />
+                </div>
+                
+                <!-- ปุ่มเพิ่มรายการ -->
+                <!-- <button
                 class="bg-yellow-400 text-black font-semibold py-3 w-full rounded-lg mt-6 hover:bg-yellow-500 transition">
                 เพิ่มรายการ
             </button> -->
-            <div class="px-6 mt-10">
-                <Button :loading="isloadingAxi" :label="'เพิ่มรายการ'" type="submit" class="w-full text-black" />
+                <div class="px-6 mt-10">
+                    <Button :loading="isloadingAxi" :label="'เพิ่มรายการ'" type="submit" class="w-full text-black" />
 
-            </div>
+                </div>
+            </Form>
         </van-popup>
+
+        <ConfirmDialog group="headless">
+            <template #container="{ message, acceptCallback, rejectCallback }">
+                <div class="flex flex-col items-center p-8 bg-surface-0  rounded">
+                    <!-- <div class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
+                    <i class="pi pi-question text-5xl"></i>
+                </div> -->
+                    <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+                    <p class="mb-0">{{ message.message }}</p>
+                    <div class="flex items-center gap-2 mt-6">
+                        <Button :loading="isloadingAxi" :label="('ยืนยัน')" @click="acceptCallback"></Button>
+                        <Button :loading="isloadingAxi" :label="('ยกเลิก')" outlined @click="rejectCallback"></Button>
+                    </div>
+                </div>
+            </template>
+        </ConfirmDialog>
     </div>
     <MyToast :data="alertToast" />
 
@@ -149,6 +167,88 @@ const listItemShop = ref([
 ])
 
 const removeItem = (index) => {
-  listItemShop.value.splice(index, 1);
+    listItemShop.value.splice(index, 1);
 };
+import { useFieldArray, useForm, Form, useField } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as zod from "zod";
+const requireValue = ('กรุณาระบุข้อมูลให้ถูกต้อง');
+// *************  VARIDATOR
+const validationSchema = toTypedSchema(
+    zod.object({
+        business_list_name: zod.string().nonempty(requireValue).default(""),
+    })
+);
+const { handleSubmit, handleReset, errors } = useForm({
+    validationSchema,
+});
+
+
+const { value: business_list_name } = useField('business_list_name')
+
+const handleNext = handleSubmit(async () => {
+    try {
+        const payload = {
+            "business_id": parseInt(route.params.id),
+            "shop_name": resShop.value?.shop_name,
+            "business_list_name": business_list_name.value,
+            "business_list_price": "0",
+            "status": true
+            // "status": false
+        }
+        const res = await dataApi.createBusinessList(payload);
+        handleReset()
+        loadShop();
+        showAddMenu.value = false
+    } catch (error) {
+        alertToast.value = {
+            title: ('ล้มเหลว'),
+            isError: true,
+            color: "error",
+            msg: error.response?.data?.message || "Error occurred",
+            dataError: error,
+        };
+        console.error(error)
+    }
+})
+
+import { useConfirm } from "primevue/useconfirm";
+const confirm = useConfirm();
+const idFordelete=ref();
+const askDeleteItem = async (item)=>{
+    try {
+        console.log(item)
+        idFordelete.value =await item.id
+        console.log(idFordelete.value)
+
+        confirm.require({
+        group: 'headless',
+        header: 'ยืนยัน',
+        message: 'กดยืนยันการลบรายการ',
+        accept: () => {
+            deleteItemShop();
+        },
+        reject: () => {
+            // toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+        }
+    });
+    } catch (error) {
+        
+    }
+}
+const deleteItemShop = async()=>{
+    try {
+        const res = await dataApi.deleteBusinessList(idFordelete.value);
+        loadShop();
+    } catch (error) {
+        alertToast.value = {
+            title: ('ล้มเหลว'),
+            isError: true,
+            color: "error",
+            msg: error.response?.data?.message || "Error occurred",
+            dataError: error,
+        };
+        console.error(error)
+    }
+}
 </script>

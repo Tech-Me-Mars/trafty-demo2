@@ -10,7 +10,7 @@
 <template>
   <div class="min-h-screen bg-primary-main flex flex-col">
     <van-nav-bar :title="'แบบตรวจสอบด้านความปลอดภัย'" left-arrow  :border="false"
-      @click-left="navigateTo(`/client/information/${route.params.id}`)">
+      @click-left="navigateTo(`/inspector/safety-form/${route.params.id}/form2`)">
     </van-nav-bar>
     <section class="p-4 card-content flex-grow pt-10">
       <!-- <Form :validation-schema="yupSchema" @submit="onSubmit"> -->
@@ -52,6 +52,8 @@
         <!-- </NuxtLink> -->
       </form>
     </section>
+    <MyToast :data="alertToast" />
+
   </div>
 </template>
 
@@ -65,16 +67,10 @@ const isloadingAxi = useState("isloadingAxi");
 import { ref, computed, onMounted } from "vue";
 import { useForm, Field, Form, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
-import * as dataApi from "../api/data.js";
+import * as dataApi from "./api/data.js";
 
 const route = useRoute();
-const stepsBar = ref([
-  { step: 1, active: false },
-  { step: 2, active: true },
-  { step: 3, active: false },
-  { step: 4, active: false },
-  { step: 5, active: false },
-])
+const alertToast = ref({});
 
 const questions = ref([]); // เก็บข้อมูลคำถาม
 const answers = ref({}); // เก็บคำตอบของผู้ใช้
@@ -125,7 +121,7 @@ const loadSurveyFromVendorForFirstAudit =async ()=>{
 const resSurvey = ref()
 const loadSurvey = async () => {
   try {
-    const surveyResponse = await dataApi.geySurveyBuId(1);
+    const surveyResponse = await dataApi.geySurveyBuId(3);
     resSurvey.value = surveyResponse.data.data;
     questions.value = surveyResponse.data.data.questions;
     // await getChoiceForUpdate(route.params.id);
@@ -143,17 +139,73 @@ const submitForm = async () => {
   const isValid = questions.value.every(question => answers.value[question.id]);
 
   if (isValid) {
-    // แปลง answers เป็นอาร์เรย์ของอ็อบเจ็กต์ [{ "8": 1 }, { "9": 3 }, ...]
     const formattedAnswers = Object.keys(answers.value).map(key => ({
       [key]: answers.value[key]
     }));
     await saveToLocalStorage("audit_choice", formattedAnswers);
-    await navigateTo(`/inspector/safety-form/${route.params.id}/form2`);
+    // await navigateTo(`/inspector/safety-form/${route.params.id}/form3`);
+
+
+    try {
+        const storedChoice = JSON.parse(localStorage.getItem("audit_choice")) || [];
+        const payload = {
+            "business_id": parseInt(route.params.id),
+            "user_type": "เจ้าหน้าที่ตำรวจท่องเที่ยว",
+            "user_id": null,
+            "user_name": null,
+            "police_id": null,
+            "police_name": null,
+            "police_headquarters_id": null,
+            "police_headquarters_name": null,
+            "security_audit_times": null,
+            "safety_audit_date": null,
+            "safety_audit_time": null,
+            "safety_audit_location": null,
+            "choice": storedChoice,
+            "score_show": null,
+        }
+        const res = await dataApi.saveSurveyAudit(payload);
+        alertToast.value = {
+            title: 'สำเร็จ',
+            color: 'info',
+            isError: false,
+            msg: res.data.message,
+        }
+        clearAuditLocalStorageKeys();
+        // เปลี่ยนเส้นทางไปยังหน้าอื่น
+        // setTimeout(() => {
+        navigateTo(`/inspector/send-warning/${res.data.data}/status`);
+        // }, 1000);
+
+    } catch (error) {
+      alertToast.value = {
+            title: 'ล้มเหลว',
+            isError: true,
+            color: "error",
+            msg: error.response?.data?.message || "Error occurred",
+            dataError: error,
+        };
+        console.error(error)
+    }
   } else {
     // alert("กรุณาตอบทุกข้อก่อนส่งแบบสอบถาม");
   }
 };
+const clearAuditLocalStorageKeys = () => {
+    const keysToRemove = [
+        "audit_shop_name",
+        "audit_police_name",
+        "audit_police_headquarters_name",
+        "audit_safety_audit_date",
+        "audit_security_audit_times",
+        "audit_safety_audit_location",
+        "audit_safety_audit_time",
+        "audit_choice",
+        "audit_business_id"
+    ];
 
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+};
 function saveToLocalStorage(key, newValue) {
   // ตรวจสอบว่ามีข้อมูลใน localStorage หรือไม่
   let storedData = JSON.parse(localStorage.getItem(key)) || [];

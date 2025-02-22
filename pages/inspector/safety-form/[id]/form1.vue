@@ -10,7 +10,7 @@
 <template>
   <div class="min-h-screen bg-primary-main flex flex-col">
     <van-nav-bar :title="'แบบตรวจสอบด้านความปลอดภัย'" left-arrow  :border="false"
-      @click-left="navigateTo(`/inspector/safety-form/${route.params.id}/form2`)">
+      @click-left="navigateTo(`/client/information/${route.params.id}`)">
     </van-nav-bar>
     <section class="p-4 card-content flex-grow pt-10">
       <!-- <Form :validation-schema="yupSchema" @submit="onSubmit"> -->
@@ -65,16 +65,9 @@ const isloadingAxi = useState("isloadingAxi");
 import { ref, computed, onMounted } from "vue";
 import { useForm, Field, Form, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
-import * as dataApi from "../api/data.js";
+import * as dataApi from "./api/data.js";
 
 const route = useRoute();
-const stepsBar = ref([
-  { step: 1, active: false },
-  { step: 2, active: true },
-  { step: 3, active: false },
-  { step: 4, active: false },
-  { step: 5, active: false },
-])
 
 const questions = ref([]); // เก็บข้อมูลคำถาม
 const answers = ref({}); // เก็บคำตอบของผู้ใช้
@@ -125,7 +118,7 @@ const loadSurveyFromVendorForFirstAudit =async ()=>{
 const resSurvey = ref()
 const loadSurvey = async () => {
   try {
-    const surveyResponse = await dataApi.geySurveyBuId(3);
+    const surveyResponse = await dataApi.geySurveyBuId(1);
     resSurvey.value = surveyResponse.data.data;
     questions.value = surveyResponse.data.data.questions;
     // await getChoiceForUpdate(route.params.id);
@@ -148,7 +141,7 @@ const submitForm = async () => {
       [key]: answers.value[key]
     }));
     await saveToLocalStorage("audit_choice", formattedAnswers);
-    await navigateTo(`/inspector/safety-form/${route.params.id}/form3`);
+    await navigateTo(`/inspector/safety-form/${route.params.id}/form2`);
   } else {
     // alert("กรุณาตอบทุกข้อก่อนส่งแบบสอบถาม");
   }

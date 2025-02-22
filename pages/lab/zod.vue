@@ -10,7 +10,7 @@
 <template>
   <div class="bg-zinc-100 min-h-screen">
     <van-nav-bar title="แบบตรวจสอบด้านความปลอดภัย" left-arrow
-      @click-left="navigateTo(`/inspector/inspec-vender/${route.params.id}/safety-form/form1`)">
+      @click-left="navigateTo(`/inspector/inspec-vendor/${route.params.id}/safety-form/form1`)">
     </van-nav-bar>
     <div class="p-4 ">
       <Form  @submit="onSubmit"> 
@@ -130,7 +130,7 @@ const handleNext = handleSubmit(async (values) => {
   }
 
   // เปลี่ยนเส้นทางไปยังหน้าอื่น
-  navigateTo(`/inspector/inspec-vender/${route.params.id}/safety-form/form3`);
+  navigateTo(`/inspector/inspec-vendor/${route.params.id}/safety-form/form3`);
 });
 
 function saveToLocalStorage(key, newValue) {
