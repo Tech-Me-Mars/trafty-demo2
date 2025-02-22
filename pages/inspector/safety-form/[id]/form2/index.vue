@@ -8,24 +8,19 @@
 }
 </style>
 <template>
-  <div class="bg-zinc-100 min-h-screen">
-    <van-nav-bar :title="t('แบบตรวจสอบด้านความปลอดภัย')" left-arrow
-      @click-left="navigateTo(`/inspector/inspec-vender/${route.params.id}/safety-form/form3`)">
+  <div class="min-h-screen bg-primary-main flex flex-col">
+    <van-nav-bar :title="'แบบตรวจสอบด้านความปลอดภัย'" left-arrow  :border="false"
+      @click-left="navigateTo(`/inspector/safety-form/${route.params.id}/form1`)">
     </van-nav-bar>
-    <div class="p-4 ">
+    <section class="p-4 card-content flex-grow pt-10">
       <!-- <Form :validation-schema="yupSchema" @submit="onSubmit"> -->
       <form @submit.prevent="submitForm">
 
-        <div class="flex space-x-5 items-center justify-center mb-8">
-          <div v-for="(item, index) in stepsBar" :key="index"
-            :class="item.active ? 'w-8 h-2 bg-blue-900' : 'w-8 h-2 bg-gray-200'"></div>
-        </div>
+
 
 
         <div class="card mb-5">
-          <h2 class="font-bold text-lg mb-8">
-            {{ t('รายละเอียดการตรวจสอบมาตรฐานด้านความปลอดภัยสำหรับการท่องเที่ยว') }}
-          </h2>
+
           <h2 class="font-bold text-lg mb-8">
             {{ resSurvey?.topic?.name }}
           </h2>
@@ -33,41 +28,30 @@
           <div class="space-y-4">
             <div v-for="(question, index) in questions" :key="question.id" class="form-group">
 
-              <label class="label-survay" :for="`radio`">{{ question.text }}</label>
-              <div class="flex flex-col flex-wrap gap-2">
-                <div class="flex items-center gap-2" v-for="choice in question.choices" :key="choice.id">
+              <label class="" :for="`radio`">{{ question.text }}</label>
+              <div class="flex flex-col flex-wrap gap-2 mt-3">
+                <div class="flex items-center gap-2 bg-yellow-100 p-3" v-for="choice in question.choices" :key="choice.id">
                     <RadioButton :inputId="`question_${choice.id}`" v-model="answers[question.id]"
                       :value="choice.id" />
                   <label :for="`question_${choice.id}`">{{ choice.audit_choice_text }}</label>
                 </div>
                 <p v-if="showErrors && !answers[question.id]" class="error-text">
-                  {{ t('กรุณาเลือกคำตอบสำหรับข้อนี้') }}
-                </p>
-                <!-- <div v-for="choice in question.choices" :key="choice.id">
-                  <label class="flex items-center space-x-2 cursor-pointer">
-                    <input type="radio" :name="`question_${question.id}`" :value="choice.id"
-                      v-model="answers[question.id]" />
-                    <i :class="choice.icon"></i>
-                    <span>{{ choice.audit_choice_text }}</span>
-                  </label>
-                </div>
-                <p v-if="showErrors && !answers[question.id]" class="error-text">
                   กรุณาเลือกคำตอบสำหรับข้อนี้
-                </p> -->
+                </p>
               </div>
             </div>
 
           </div>
         </div>
-
-        <Button :loading="isloadingAxi" :label="t('ถัดไป')" severity="primary" type="submit" rounded class="w-full" :pt="{
+        <!-- <NuxtLink to="/vendor/manage-business/survay/form3"> -->
+        <Button :loading="isloadingAxi" label="ถัดไป" severity="primary" type="submit" class="w-full" :pt="{
           root: {
             class: '!border-primary-main'
           },
         }" />
         <!-- </NuxtLink> -->
       </form>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -86,9 +70,9 @@ import * as dataApi from "../api/data.js";
 const route = useRoute();
 const stepsBar = ref([
   { step: 1, active: false },
-  { step: 2, active: false },
+  { step: 2, active: true },
   { step: 3, active: false },
-  { step: 4, active: true },
+  { step: 4, active: false },
   { step: 5, active: false },
 ])
 
@@ -101,8 +85,10 @@ const getChoiceForUpdate = async (surveyId) => {
   try {
     const timeSurveyResponse = await dataApi.geyTimeSurvey(surveyId);
     const existingAnswers = timeSurveyResponse.data.data.survey_audit_police;
+    console.log(existingAnswers)
     if (!existingAnswers) {
-      return loadSurveyFromVendorForFirstAudit();
+      return
+      // return loadSurveyFromVendorForFirstAudit();
     }
     // กรองเฉพาะค่าที่ audit_questions_id มีอยู่ใน questions
     const filteredAnswers = existingAnswers.filter(entry => 
@@ -118,6 +104,7 @@ const getChoiceForUpdate = async (surveyId) => {
     console.error("Error fetching existing choices:", error);
   }
 };
+
 const loadSurveyFromVendorForFirstAudit =async ()=>{
   try {
     const res = await dataApi.geyVendorSurveyByBusinessId(route.params.id)
@@ -138,10 +125,10 @@ const loadSurveyFromVendorForFirstAudit =async ()=>{
 const resSurvey = ref()
 const loadSurvey = async () => {
   try {
-    const surveyResponse = await dataApi.geySurveyBuId(3);
+    const surveyResponse = await dataApi.geySurveyBuId(2);
     resSurvey.value = surveyResponse.data.data;
     questions.value = surveyResponse.data.data.questions;
-    await getChoiceForUpdate(route.params.id);
+    // await getChoiceForUpdate(route.params.id);
   } catch (error) {
     console.error("Error fetching questions:", error);
   }
@@ -160,9 +147,8 @@ const submitForm = async () => {
     const formattedAnswers = Object.keys(answers.value).map(key => ({
       [key]: answers.value[key]
     }));
-
     await saveToLocalStorage("audit_choice", formattedAnswers);
-    await navigateTo(`/inspector/inspec-vender/${route.params.id}/safety-form/form5`);
+    await navigateTo(`/inspector/safety-form/${route.params.id}/form3`);
   } else {
     // alert("กรุณาตอบทุกข้อก่อนส่งแบบสอบถาม");
   }

@@ -1,6 +1,6 @@
 <template>
     <div class="bg-zinc-100 min-h-screen">
-        <van-nav-bar :title="'ตรวจสอบ'" left-arrow @click-left="navigateTo('/')">
+        <van-nav-bar :title="'ตรวจสอบ'" left-arrow @click-left="navigateTo('/')"  :border="false">
             <template #left>
                 <back-page />
             </template>
@@ -9,8 +9,7 @@
         <section class="p-4 bg-gray-50 ">
             <!-- รูปภาพร้านค้า -->
             <div class="relative">
-                <img :src="resInfo?.image_profile" alt="รูปภาพร้านค้า"
-                    class="w-full h-64 object-cover rounded-lg" />
+                <img :src="resInfo?.image_profile" alt="รูปภาพร้านค้า" class="w-full h-64 object-cover rounded-lg" />
                 <!-- Indicator -->
                 <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
                     <span class="w-8 h-1 bg-yellow-500 rounded"></span>
@@ -24,11 +23,13 @@
                 <!-- ชื่อร้าน + สถานะ -->
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-bold">{{ resInfo?.shop_name }}</h2>
-                    <span v-if="resInfo?.status == false" class="bg-red-500 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1">
+                    <span v-if="resInfo?.status == false"
+                        class="bg-red-500 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1">
                         <i class="fa-solid fa-exclamation-circle"></i> รอตรวจสอบ
                     </span>
-                    <span v-if="resInfo?.status == true" class="bg-green-500 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1">
-                        <i class="fa-solid fa-exclamation-circle"></i> ตรวจสอบแล้ว
+                    <span v-if="resInfo?.status == true"
+                        class="bg-green-500 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1">
+                        <i class="fa-solid fa-check"></i> ตรวจสอบแล้ว
                     </span>
                 </div>
 
@@ -53,28 +54,43 @@
                 </div>
 
                 <!-- Accordion -->
-                <div class="mt-6">
+                <div class="">
                     <!-- <div class="border-b py-3 flex justify-between items-center cursor-pointer">
                         <span class="text-gray-800 font-bold">รายการอาหาร</span>
                         <i class="fa-solid fa-chevron-down text-yellow-500"></i>
                     </div> -->
                     <div class="mt-6">
-                        <van-collapse v-model="business_items_active" accordion class="mt-4">
-        <van-collapse-item title="📖 รายการอาหาร" name="menu">
-            <div>
-                {{   }}
-            </div>
-        </van-collapse-item>
-      </van-collapse>
-      </div>
-                    <div class="border-b py-3 flex justify-between items-center cursor-pointer">
+                     
+                        <van-collapse v-model="business_items_active"   :border="false">
+                            <van-collapse-item title="รายการ" name="menu"  class="">
+                                <div class="">
+                                    <div v-for="menu in resInfo?.business_lists" :key="menu.id"
+                                        class="flex justify-between">
+                                        <span class="text-gray-800 font-semibold">{{ menu.business_list_name }}</span>
+                                        <!-- <span class="text-yellow-500 font-bold">{{ menu.business_list_price }} บาท</span> -->
+                                    </div>
+                                </div>
+                            </van-collapse-item>
+                            <van-collapse-item title="ข้อมูลมาตรฐานความปลอดภัย" name="policy"  class="">
+                                <!-- <div class="">
+                                    <div v-for="menu in resInfo?.business_lists" :key="menu.id"
+                                        class="flex justify-between">
+                                        <span class="text-gray-800 font-semibold">{{ menu.business_list_name }}</span>
+                                      
+                                    </div>
+                                </div> -->
+                            </van-collapse-item>
+                        </van-collapse>
+                    </div>
+                    <!-- <div class="border-b py-3 flex justify-between items-center cursor-pointer">
                         <span class="text-gray-800 font-bold">ข้อมูลมาตรฐานความปลอดภัย</span>
                         <i class="fa-solid fa-chevron-down text-yellow-500"></i>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- ปุ่มประเมิน -->
-                <button
+                 {{route.params.id}}
+                <button @click="navigateTo(`/inspector/safety-form/${route.params.id}/form1`)"
                     class="w-full mt-6 bg-yellow-400 text-black font-semibold py-3 rounded-lg shadow-md hover:bg-yellow-500 transition">
                     ประเมิน
                 </button>
@@ -84,14 +100,24 @@
 
     </div>
 </template>
-<style scoped>
+<style >
 .van-nav-bar {
     --van-nav-bar-background: #ffc83A;
     --van-nav-bar-text-color: black;
     --van-nav-bar-icon-color: black;
     --van-nav-bar-title-text-color: black;
-    --van-nav-bar-height: 70px
+    --van-nav-bar-height: 70px;
+    --van-collapse-item-content-padding:0px !important;
 }
+.van-cell{
+    padding-inline: 0!important;
+}
+:root {
+  --van-collapse-item-content-text-color: #f59e0b; /* เปลี่ยนเป็นสีเหลือง */
+}
+/* .van-collapse-item{
+    --van-collapse-item-content-text-color:red
+}	 */
 </style>
 <script setup>
 // definePageMeta({
@@ -109,7 +135,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const localPath = useLocalePath();
 
-const business_items_active =ref(false)
+const business_items_active = ref([]);
 
 const showShare = ref(false);
 const options = [
