@@ -46,3 +46,8 @@ export function deleteBusinessList(id) {
   const url = `/api/v1/business-list/delect-business-list/${id}`;
   return request("delete", url, {}, true);
 }
+
+export function getNotifyBusiness(id) {
+  const url = `/api/v1/notications/update-notifications-by-business-id/${id}`;
+  return request("get", url, {}, true);
+}

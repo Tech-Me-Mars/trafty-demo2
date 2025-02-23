@@ -10,12 +10,7 @@
             <!-- รูปภาพร้านค้า -->
             <div class="relative">
                 <img :src="resInfo?.image_profile" alt="รูปภาพร้านค้า" class="w-full h-64 object-cover rounded-lg" />
-                <!-- Indicator -->
-                <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                    <span class="w-8 h-1 bg-yellow-500 rounded"></span>
-                    <span class="w-3 h-1 bg-gray-400 rounded"></span>
-                    <span class="w-3 h-1 bg-gray-400 rounded"></span>
-                </div>
+
             </div>
 
             <!-- รายละเอียดร้านค้า -->
@@ -100,7 +95,7 @@
                         <i class="fa-solid fa-chevron-down text-yellow-500"></i>
                     </div> -->
                 </div>
-                <button @click="navigateTo(`/inspector/safety-form/${route.params.id}/form1`)"
+                <button @click="navigateTo(`/inspector/safety-form/${route.params.id}/form1`)" v-if="resProfile?.role_id == 3"
                     class="w-full mt-6 bg-yellow-400 text-black font-semibold py-3 rounded-lg shadow-md hover:bg-yellow-500 transition">
                     ประเมิน
                 </button>

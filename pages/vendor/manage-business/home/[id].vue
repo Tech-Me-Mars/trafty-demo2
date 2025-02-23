@@ -5,10 +5,17 @@
             <h1 class="text-lg font-bold text-black">ข้อมูลแหล่งท่องเที่ยวของคุณ</h1>
             <div class="flex items-center space-x-4">
                 <!-- ปุ่มแจ้งเตือน -->
+                <van-badge :content="getNotifyCoute" v-if="getNotifyCoute>0">
                 <button @click="navigateTo(`/vendor/notifications/${route.params.id}`)"
                     class="w-10 h-10 bg-yellow-200 flex items-center justify-center rounded-full shadow-md hover:bg-yellow-300 transition">
                     <i class="fa-solid fa-bell text-2xl text-gray-800"></i>
                 </button>
+                </van-badge>
+                <button v-else @click="navigateTo(`/vendor/notifications/${route.params.id}`)"
+                    class="w-10 h-10 bg-yellow-200 flex items-center justify-center rounded-full shadow-md hover:bg-yellow-300 transition">
+                    <i class="fa-solid fa-bell text-2xl text-gray-800"></i>
+                </button>                
+                
 
                 <!-- ปุ่มเมนู -->
                 <!-- <button
@@ -158,7 +165,10 @@ const loadShop = async () => {
         };
     }
 }
-onMounted(() => { loadShop() })
+onMounted(() => { 
+    loadShop()
+    loadNotyfy()
+ })
 
 const listItemShop = ref([
     { name: "ลาวาโทสต์วานอฟฟี่" },
@@ -249,6 +259,16 @@ const deleteItemShop = async()=>{
             dataError: error,
         };
         console.error(error)
+    }
+}
+
+const getNotifyCoute =ref(0);
+const loadNotyfy =async () =>{
+    try {
+            const res  = await dataApi.getNotifyBusiness(route.params.id);
+            getNotifyCoute.value =res.data.data.length
+    } catch (error) {
+       console.error(error) 
     }
 }
 </script>

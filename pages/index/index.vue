@@ -23,8 +23,8 @@
     <div class="p-4">
 
       <h2 class="text-lg font-semibold mb-4">รายการทั้งหมด</h2>
-      <div class="space-y-4">
-        <div v-for="(place, index) in resData" :key="index" class="bg-white rounded-lg shadow-md overflow-hidden flex p-2" @click="navigateTo(`/client/information/${place?.id}`)">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div v-for="(place, index) in resData" :key="index" class="bg-white rounded-lg shadow-md overflow-hidden flex p-2 max-w-md cursor-pointer" @click="navigateTo(`/client/information/${place?.id}`)">
           <img :src="place?.image_profile" alt="Place" class="w-24 h-24 object-cover">
           <div class="p-4 flex-1">
             <h3 class="text-lg font-semibold">{{ place?.shop_name }}</h3>
