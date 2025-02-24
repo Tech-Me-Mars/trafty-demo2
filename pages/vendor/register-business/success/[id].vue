@@ -34,7 +34,7 @@
         </p>
 
         <!-- ปุ่มตกลง -->
-        <Button @click="navigateTo(`/vendor/register-business/success/${route.params.id}`)" class="w-full mt-10" style="color: white!important;" severity="contrast" label="ตกลง" />
+        <Button @click="navigateTo(`/vendor/manage-business/home/${route.params.id}`)" class="w-full mt-10" style="color: white!important;" severity="contrast" label="ตกลง" />
    
         
     </div>
