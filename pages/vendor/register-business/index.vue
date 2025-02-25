@@ -233,11 +233,15 @@ const triggerFileInputProfile = () => {
 </style>
 <template>
   <div class="min-h-screen bg-primary-main">
-    <layouts-header style="height: 150px;">
-      <h6 class="header-label mb-4">เริ่มต้นสร้างธุรกิจการท่องเที่ยว</h6>
-      <p>กรุณากรอกข้อมูลธุรกิจการท่องเที่ยวของคุณให้ครบถ้วน</p>
+    <layouts-header class="relative h-[150px] bg-blue-500  flex flex-col justify-center items-center">
+    <!-- ปุ่มกากบาทลอยมุมขวาบน -->
 
-    </layouts-header>
+    <BackPage class="absolute top-3 left-3" @click="navigateTo('/vendor/my-business')" />
+
+    <!-- เนื้อหาภายใน Header -->
+    <h6 class="header-label mb-4 text-lg font-bold">เริ่มต้นสร้างธุรกิจการท่องเที่ยว</h6>
+    <p class="text-sm">กรุณากรอกข้อมูลธุรกิจการท่องเที่ยวของคุณให้ครบถ้วน</p>
+  </layouts-header>
     <!-- <van-nav-bar title="">
       <template #title>
         เริ่มต้นสร้างธุรกิจการท่องเที่ยว<br>

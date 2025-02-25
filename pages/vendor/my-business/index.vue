@@ -39,8 +39,11 @@
                     <div class="flex space-x-2 mt-4 w-full justify-center">
                         <button @click="navigateTo(`/vendor/manage-business/home/${shop?.id}`)"
                             class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black rounded-lg shadow hover:bg-yellow-500 transition">
-                            <i class="fa-solid fa-eye"></i> ดูรายละเอียด
+                            
+                            <i class="fa-solid fa-eye"></i> ดูรายละเอียด <span v-if="shop?.notification_status == 1"><i class="fa-solid fa-circle-exclamation" style="color: red;"></i></span>
                         </button>
+              
+                       
                     </div>
 
                 </div>

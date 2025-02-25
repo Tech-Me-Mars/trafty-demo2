@@ -18,7 +18,7 @@
 
                 <!-- รายการร้านค้า -->
                 <div v-if="resSurveytouristwaiting.length >0" v-for="shop in resSurveytouristwaiting" :key="shop.id"
-                    class="bg-yellow-100 border border-gray-200 rounded-lg p-4 shadow-sm flex flex-col">
+                    class="bg-yellow-100 border border-gray-200 rounded-lg p-4 shadow-sm flex flex-col mb-4">
                     <!-- แถวบน: ชื่อร้าน + สถานะ -->
                     <div class="flex justify-between items-center">
                         <h3 class="text-lg font-bold text-gray-900">{{ shop?.shop_name }}</h3>

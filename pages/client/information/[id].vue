@@ -16,14 +16,14 @@
             <!-- รายละเอียดร้านค้า -->
             <div class="bg-white p-4 rounded-lg shadow-md  relative">
                 <!-- ชื่อร้าน + สถานะ -->
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold">{{ resInfo?.shop_name }}</h2>
+                <div class="flex justify-between items-start">
+                    <h2 class="text-xl font-bold flex-grow flex-1">{{ resInfo?.shop_name }}</h2>
                     <span v-if="resInfo?.status == false"
                         class="bg-red-500 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1">
                         <i class="fa-solid fa-exclamation-circle"></i> รอตรวจสอบ
                     </span>
                     <span v-if="resInfo?.status == true"
-                        class="bg-green-500 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1">
+                        class="bg-green-500 text-white text-sm px-3 py-1 rounded-full flex items-center gap-1 ">
                         <i class="fa-solid fa-check"></i> ตรวจสอบแล้ว
                     </span>
                 </div>
