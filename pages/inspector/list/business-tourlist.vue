@@ -34,8 +34,13 @@
                     <p class="text-gray-600 mt-1">{{ shop?.shop_address }}</p>
 
                     <!-- ปุ่มตรวจสอบ / ลบรายการ -->
-                    <div class="flex justify-end space-x-2 mt-3">
+                    <div class="flex justify-end space-x-2 mt-3" v-if="shop?.survey_status_id==''">
                         <Button @click="navigateTo(`/client/information/${shop?.id}`)" label="ตรวจสอบ" severity="contrast" size="small" class="!text-white w-auto">
+                        </Button>
+                        
+                    </div>
+                    <div class="flex justify-end space-x-2 mt-3" v-else>
+                        <Button @click="navigateTo(`/client/information/${shop?.id}`)" label="ตรวจสอบแล้ว" severity="contrast" size="small" class="!text-white w-auto">
                         </Button>
                         
                     </div>

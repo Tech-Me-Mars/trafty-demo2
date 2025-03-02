@@ -10,7 +10,7 @@
     <!-- Tabs Section -->
     <section class="">
       <div class="p-4">
-            <div class="card mb-2" v-for="(item,index) in resList" :key="index">
+            <div v-if="resList.length >0" class="card mb-2" v-for="(item,index) in resList" :key="index">
               <div class="flex items-start w-full  mb-3">
                 <Image
                 :src="item?.image_profile"
@@ -63,6 +63,9 @@
                 }" @click="navigateTo(`/inspector/send-warning/waring-send-repeat/${item.survey_audit_police_id}`)" /> -->
 
               </div>
+            </div>
+            <div v-else>
+              <no-data/>
             </div>
 
             

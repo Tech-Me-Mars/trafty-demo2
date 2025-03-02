@@ -97,7 +97,7 @@
             <!-- หัวข้อ และปุ่มปิด -->
             <Form @submit="handleNext">
                 <div class="flex items-center justify-between border-b p-5 ">
-                    <h2 class="text-lg font-semibold text-black mx-auto">เพิ่มเมนู</h2>
+                    <h2 class="text-lg font-semibold text-black mx-auto">เพิ่มรายการ</h2>
                     <button @click="showAddMenu = false"
                         class="w-8 h-8 bg-yellow-400 text-black rounded-full flex items-center justify-center shadow-md hover:bg-yellow-500 transition absolute right-2">
                         <i class="fa-solid fa-xmark text-lg"></i>
@@ -106,10 +106,10 @@
 
                 <!-- ฟอร์มกรอกข้อมูล -->
                 <div class="mt-4 px-6">
-                    <label class="text-gray-500 text-sm">ชื่อเมนู</label>
+                    <label class="text-gray-500 text-sm">ชื่อรายการ</label>
                     <InputText type="text" v-model="business_list_name"
                         class="w-full border border-yellow-400 focus:border-yellow-500 rounded-md p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                        placeholder="ชื่อเมนู" :invalid="errors?.business_list_name ? true : false" />
+                        placeholder="ชื่อรายการ" :invalid="errors?.business_list_name ? true : false" />
                 </div>
                 
                 <!-- ปุ่มเพิ่มรายการ -->

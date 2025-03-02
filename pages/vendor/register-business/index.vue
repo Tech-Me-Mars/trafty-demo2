@@ -143,11 +143,11 @@ const onSubmit = handleSubmit(async () => {
 // }
 function onFileSelect(event) {
   event.files.forEach(file => {
-    if (business_img.value.length >= 3) return; // จำกัดจำนวนไฟล์ที่ 5
+    if (business_img.value.length >= 4) return; // จำกัดจำนวนไฟล์ที่ 5
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      if (business_img.value.length < 3) { // ตรวจสอบอีกครั้งก่อน push
+      if (business_img.value.length < 4) { // ตรวจสอบอีกครั้งก่อน push
         business_img.value.push({ src: e.target.result, file: file });
       }
     };

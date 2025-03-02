@@ -86,7 +86,7 @@ const onClick = (title) => {
     <!-- Menu List -->
     <div class="space-y-4">
 
-      <div class="menu-item relative" @click="navigateTo('/inspector/list/business-tourlist')">
+      <div class="menu-item relative cursor-pointer" @click="navigateTo('/inspector/list/business-tourlist')">
         <i class="fa-solid fa-map-location-dot"></i>
         <span>จัดการแหล่งท่องเที่ยว</span>
         <span v-if="resDataComon?.notify_business_tourist>0"
@@ -96,7 +96,7 @@ const onClick = (title) => {
         <i class="fa-solid fa-chevron-right text-gray-500"></i>
       </div>
 
-      <div class="menu-item relative" @click="navigateTo('/inspector/list/business-tourlist')">
+      <div class="menu-item relative cursor-pointer" @click="navigateTo('/inspector/list/business-tourlist')">
         <i class="fa-solid fa-store"></i>
         <span>จัดการธุรกิจในแหล่งท่องเที่ยว</span>
         <span v-if="resDataComon?.notify_business_tourist>0"

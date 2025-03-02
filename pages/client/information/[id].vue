@@ -58,15 +58,21 @@
 
                         <van-collapse v-model="business_items_active" :border="false">
                             <van-collapse-item title="รายการ" name="menu" class="">
+                                <template #title>
+                                    <p class="font-bold">รายการ</p>
+                                </template>
                                 <div class="">
                                     <div v-for="menu in resInfo?.business_lists" :key="menu.id"
-                                        class="flex justify-between">
-                                        <span class="text-gray-800 font-semibold">{{ menu.business_list_name }}</span>
+                                        class="flex justify-between mb-3">
+                                        <span class="text-gray-800 font-">{{ menu.business_list_name }}</span>
                                         <!-- <span class="text-yellow-500 font-bold">{{ menu.business_list_price }} บาท</span> -->
                                     </div>
                                 </div>
                             </van-collapse-item>
                             <van-collapse-item title="ข้อมูลมาตรฐานความปลอดภัย" name="policy" class="">
+                                <template #title>
+                                    <p class="font-bold">ข้อมูลมาตรฐานความปลอดภัย</p>
+                                </template>
                                 <!-- <div class="">
                                     <div v-for="menu in resInfo?.business_lists" :key="menu.id"
                                         class="flex justify-between">

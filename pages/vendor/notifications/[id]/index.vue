@@ -9,7 +9,7 @@
 
     <!-- Notification Section -->
     <section class="p-4 flex-grow pt-10 space-y-2 ">
-      <div v-for="item in resNotify" :key="item.id" class=" bg-white shadow-md p-4 cursor-pointer rounded-lg">
+      <div v-if="resNotify.length>0" v-for="item in resNotify" :key="item.id" class=" bg-white shadow-md p-4 cursor-pointer rounded-lg">
         <div class="flex items-center">
           <!-- Icon -->
           <div class="flex-shrink-0 bg-red-100 w-10 h-10 flex items-center justify-center rounded-full">
@@ -64,6 +64,9 @@
             </Form>
           </van-popup>
         </div>
+      </div>
+      <div v-else>
+         <no-data/>
       </div>
     </section>
     <MyToast :data="alertToast" />

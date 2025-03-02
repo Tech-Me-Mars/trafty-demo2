@@ -39,13 +39,16 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const role_id = localStorage.getItem("role_id");
+const token = localStorage.getItem("token");
 
 // ข้อมูลเมนูพื้นฐาน (Model)
 const baseMenu = ref([
   { id: 0, label: t('หน้าแรก'), icon: "fa-solid fa-house", path: "/" }
 ]);
 
+// เมนูออกจากระบบ และ เข้าสู่ระบบ
 const logoutMenu = { label: t('ออกจากระบบ'), icon: "fa-solid fa-right-from-bracket", path: "/auth/login" };
+const loginMenu = { label: t('เข้าสู่ระบบ'), icon: "fa-solid fa-right-to-bracket", path: "/auth/login" };
 
 const listMenu = ref([]);
 
@@ -53,24 +56,30 @@ const listMenu = ref([]);
 const conditionAppendMenu = () => {
   let dynamicMenu = [...baseMenu.value];
 
-  if (role_id == 2) {
-    dynamicMenu.push({
-      id: 1,
-      label: t('ธุรกิจของฉัน'),
-      icon: "fa-solid fa-briefcase",
-      path: "/vendor/my-business"
-    });
-  } else if (role_id == 3) {
-    dynamicMenu.push({
-      id: 1,
-      label: t('ตรวจสอบข้อมูล'),
-      icon: "fa-solid fa-check",
-      path: "/inspector/home"
-    });
+  if (token) {
+    // ถ้ามี token ให้เพิ่มเมนูตาม role_id
+    if (role_id == 2) {
+      dynamicMenu.push({
+        id: 1,
+        label: t('ธุรกิจของฉัน'),
+        icon: "fa-solid fa-briefcase",
+        path: "/vendor/my-business"
+      });
+    } else if (role_id == 3) {
+      dynamicMenu.push({
+        id: 1,
+        label: t('ตรวจสอบข้อมูล'),
+        icon: "fa-solid fa-check",
+        path: "/inspector/home"
+      });
+    }
+    // เพิ่มเมนู "ออกจากระบบ" ถ้ามี token
+    dynamicMenu.push(logoutMenu);
+  } else {
+    // ถ้าไม่มี token ให้แสดงเมนู "เข้าสู่ระบบ"
+    dynamicMenu.push(loginMenu);
   }
 
-  // รวมเมนูทั้งหมด และให้ "ออกจากระบบ" อยู่ล่างสุดเสมอ
-  dynamicMenu.push(logoutMenu);
   listMenu.value = dynamicMenu;
 };
 

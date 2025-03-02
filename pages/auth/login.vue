@@ -1,27 +1,29 @@
 <template>
-    <div class="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+    <div class="flex flex-col items-center justify-center min-h-screen p-4 bg-white">
         <!-- หัวข้อ -->
-        <h1 class="text-2xl font-bold text-gray-800 ">{{ t('เข้าสู่ระบบ') }} {{ t('Smart Travel Safety') }}</h1>
-        <p class="text-gray-500 mb-6">{{ t('เลือกประเภทผู้ใช้งานที่จะเข้าสู่ระบบ') }}</p>
+         <div class=" w-full max-w-md mx-auto">
+            <h1 class="text-2xl font-bold text-gray-800 text-center mb-10">เข้าสู่ระบบ</h1>
+        <!-- <p class="text-gray-500 mb-6">{{ t('เลือกประเภทผู้ใช้งานที่จะเข้าสู่ระบบ') }}</p> -->
 
         <!-- ปุ่มสำหรับการเลือกผู้ใช้งาน -->
-        <div class="flex flex-col w-full gap-4">
-
-            <Button :label="t('นักท่องเที่ยว')" severity="primary" type="button" rounded class="w-full" :pt="{
-                root: {
-                    class: '!border-primary-main'
-                },
-            }" @click="onTouristClick" />
-            <Button :label="t('ผู้ประกอบการ')" severity="primary" type="button" rounded class="w-full" :pt="{
-                root: {
-                    class: '!border-primary-main'
-                },
-            }" @click="onShopClick" />
-            <Button :label="t('เจ้าหน้าที่ตำรวจท่องเที่ยว')" severity="primary" type="button" rounded class="w-full" :pt="{
+        <div class="flex flex-col w-full gap-4 ">
+            <Button :label="t('เจ้าหน้าที่ตำรวจท่องเที่ยว')" severity="primary" type="button"  class="w-full" :pt="{
                 root: {
                     class: '!border-primary-main'
                 },
             }" @click="onAuditorClick" />
+
+            <Button :label="t('ผู้ประกอบการ')" severity="primary" type="button"  class="w-full" :pt="{
+                root: {
+                    class: '!border-primary-main'
+                },
+            }" @click="onShopClick" />
+                        <Button :label="t('นักท่องเที่ยว')" severity="primary" type="button"  class="w-full" :pt="{
+                root: {
+                    class: '!border-primary-main'
+                },
+            }" @click="onTouristClick" />
+
             <Button :label="t('กลับหน้าหลัก')" severity="primary" type="button" rounded outlined class="w-full" :pt="{
                 root: {
                     class: '!border-primary-main'
@@ -29,13 +31,15 @@
             }" @click="navigateTo('/')" />
         </div>
         <div class="mt-10">
-            <p class="text-sm text-gray-500">
-                {{ t('ยังไม่มีบัญชี') }}?
+            <p class="text-sm text-gray-500 text-center">
+          
                 <NuxtLink to="/auth/register" class="text-primary-main font-medium hover:underline">
                     {{ t('ลงทะเบียน') }}
                 </NuxtLink>
             </p>
         </div>
+         </div>
+       
 
         <MyToast :data="alertToast" />
 
