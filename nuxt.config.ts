@@ -19,13 +19,13 @@ export default defineNuxtConfig({
   app: {
     buildAssetsDir: `_nuxt_${Date.now()}/`,
     head: {
-      title: 'traffy',
+      title: 'travel',
       meta: [
         { charset: 'utf-8' },
         { 'http-equiv': 'cache-control', content: 'public, max-age=3600' },
       ],
       link: [
-        { rel: 'icon', href: `/image/logo_erp.png?Date=${buildTimestamp}` },
+        // { rel: 'icon', href: `/image/logo_erp.png?Date=${buildTimestamp}` },
         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Material+Icons' },
         // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+Thai', fetchpriority: 'low' }
       ],

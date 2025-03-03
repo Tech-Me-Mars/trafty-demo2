@@ -1,45 +1,58 @@
 <template>
     <div class="flex flex-col items-center justify-center min-h-screen p-4 bg-white">
         <!-- หัวข้อ -->
-         <div class=" w-full max-w-md mx-auto">
-            <h1 class="text-2xl font-bold text-gray-800 text-center mb-10">เข้าสู่ระบบ</h1>
-        <!-- <p class="text-gray-500 mb-6">{{ t('เลือกประเภทผู้ใช้งานที่จะเข้าสู่ระบบ') }}</p> -->
+        <div class=" w-full max-w-md mx-auto">
+            <h1 class="text-2xl font-bold  text-center mb-10 bg-yellow-500">เข้าสู่ระบบ</h1>
+            <!-- <p class="text-gray-500 mb-6">{{ t('เลือกประเภทผู้ใช้งานที่จะเข้าสู่ระบบ') }}</p> -->
 
-        <!-- ปุ่มสำหรับการเลือกผู้ใช้งาน -->
-        <div class="flex flex-col w-full gap-4 ">
-            <Button :label="t('เจ้าหน้าที่ตำรวจท่องเที่ยว')" severity="primary" type="button"  class="w-full" :pt="{
+            <!-- ปุ่มสำหรับการเลือกผู้ใช้งาน -->
+            <div class="flex flex-col w-full gap-4 ">
+                <!-- <Button :label="('เจ้าหน้าที่')" severity="primary" type="button"  class="w-full" :pt="{
                 root: {
                     class: '!border-primary-main'
                 },
-            }" @click="onAuditorClick" />
+            }" @click="onAuditorClick" /> -->
+                <div class="bg-yellow-500 p-10 flex justify-center items-center cursor-pointer" @click="onAuditorClick">
+                    <h1 class="font-bold text-4xl font-white text-center">เจ้าหน้าที่</h1>
+                </div>
 
-            <Button :label="t('ผู้ประกอบการ')" severity="primary" type="button"  class="w-full" :pt="{
+                <!-- <Button :label="t('ผู้ประกอบการ')" severity="primary" type="button"  class="w-full" :pt="{
                 root: {
                     class: '!border-primary-main'
                 },
-            }" @click="onShopClick" />
-                        <Button :label="t('นักท่องเที่ยว')" severity="primary" type="button"  class="w-full" :pt="{
-                root: {
-                    class: '!border-primary-main'
-                },
-            }" @click="onTouristClick" />
+            }" @click="onShopClick" /> -->
+                <div class="bg-yellow-500 p-10 flex justify-center items-center cursor-pointer" @click="onShopClick">
+                    <h1 class="font-bold text-4xl font-white text-center">ผู้ประกอบการ</h1>
+                </div>
 
-            <Button :label="t('กลับหน้าหลัก')" severity="primary" type="button" rounded outlined class="w-full" :pt="{
-                root: {
-                    class: '!border-primary-main'
-                },
-            }" @click="navigateTo('/')" />
+                <div class="bg-yellow-500 p-10 flex justify-center items-center cursor-pointer" @click="onTouristClick">
+                    <h1 class="font-bold text-4xl font-white text-center">นักท่องเที่ยว</h1>
+                </div>
+                <!-- <Button :label="t('นักท่องเที่ยว')" severity="primary" type="button" class="w-full" :pt="{
+                    root: {
+                        class: '!border-primary-main'
+                    },
+                }" @click="onTouristClick" /> -->
+
+                <!-- <Button :label="t('กลับหน้าหลัก')" severity="primary" type="button" rounded outlined class="w-full" :pt="{
+                    root: {
+                        class: '!border-primary-main'
+                    },
+                }" @click="navigateTo('/')" /> -->
+                <div class="bg-yellow-500 p-6 flex justify-center items-center cursor-pointer" @click="navigateTo('/')">
+                    <h1 class="font-bold text-2xl font-white text-center">กลับหน้าหลัก</h1>
+                </div>
+            </div>
+            <div class="mt-10">
+                <p class="text-sm text-gray-500 text-center">
+
+                    <NuxtLink to="/auth/register" class="text-black font-medium underline">
+                        ลงทะเบียน
+                    </NuxtLink>
+                </p>
+            </div>
         </div>
-        <div class="mt-10">
-            <p class="text-sm text-gray-500 text-center">
-          
-                <NuxtLink to="/auth/register" class="text-primary-main font-medium hover:underline">
-                    {{ t('ลงทะเบียน') }}
-                </NuxtLink>
-            </p>
-        </div>
-         </div>
-       
+
 
         <MyToast :data="alertToast" />
 
